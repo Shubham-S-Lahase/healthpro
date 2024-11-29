@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import "./Slider.css";
 
-const Slider = () => {
+const Slider = ({onChange}) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (event) => {
-    setValue(Number(event.target.value));
+    const newValue = Number(event.target.value);
+    setValue(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
   };
 
   return (
@@ -22,7 +26,7 @@ const Slider = () => {
             }}
           >
             {value === index && (
-              <div className="step-label">{index + 1}</div>
+              <div className="step-label">{index}</div>
             )}
           </div>
         ))}

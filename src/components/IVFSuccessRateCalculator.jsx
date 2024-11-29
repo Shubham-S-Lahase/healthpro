@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Slider from "./Slider";
 import Breadcrumb from "./BreadCrumb";
+import calculateIVFSuccessRate from "../services/ivfService";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ageRanges = [
   { id: "under30", label: "Under 30" },
@@ -17,6 +21,10 @@ const IVFSuccessRateCalculator = () => {
     ICSI: null,
     PGT: null,
   });
+  const [medicalConditions, setMedicalConditions] = useState([]);
+  const [numCycles, setNumCycles] = useState(0);
+
+  const navigate = useNavigate();
 
   const handleProcedureChange = (procedure, value) => {
     setUndergoneProcedures((prev) => ({
@@ -25,14 +33,57 @@ const IVFSuccessRateCalculator = () => {
     }));
   };
 
+  const handleCheckboxChange = (condition) => {
+    setMedicalConditions((prev) =>
+      prev.includes(condition)
+        ? prev.filter((item) => item !== condition)
+        : [...prev, condition]
+    );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!selectedAgeRange) {
+      toast.error("Please select your age range.");
+      return;
+    }
+
+    if (!undergoneProcedures.ICSI || !undergoneProcedures.PGT) {
+      toast.error("Please indicate if you have undergone ICSI and PGT procedures.");
+      return;
+    }
+
+    if (numCycles === null || numCycles === undefined) {
+      toast.error("Please specify the number of IVF cycles.");
+      return;
+    }
+
+    const formData = {
+      selectedAgeRange,
+      undergoneProcedures,
+      medicalConditions,
+      numCycles,
+    };
+
+    const successRate = calculateIVFSuccessRate(formData);
+
+    navigate("/ivf-success-rate-calculator/result", {
+      state: { successRate },
+    });
+  };
+
+
   return (
     <div className="w-full h-full flex flex-col items-center bg-[#FCFAF5] pt-20">
       <div className="absolute left-20 top-24">
         <Breadcrumb />
       </div>
+      <ToastContainer />
       <form
         className="flex flex-col flex-wrap justify-around gap-8 mt-6 items-center"
         style={{ width: "975px" }}
+        onSubmit={handleSubmit}
       >
         <div className="w-full flex flex-col gap-5">
           <h1 className="text-[28px] font-medium leading-[42px] text-center text-[#1E231E]">
@@ -72,7 +123,7 @@ const IVFSuccessRateCalculator = () => {
           <h1 className="text-[28px] font-medium leading-[42px] text-center text-[#1E231E]">
             Number of IVF Cycles?
           </h1>
-          <Slider />
+          <Slider onChange={(value) => setNumCycles(value)}/>
         </div>
 
         <div className="w-full flex flex-col gap-5">
@@ -218,7 +269,7 @@ const IVFSuccessRateCalculator = () => {
                 key={condition}
                 className="text-xl font-normal text-[#1E231E] cursor-pointer flex gap-[10px] items-center peer-checked:font-semibold"
               >
-                <input type="checkbox" className="peer hidden" id={condition} />
+                <input type="checkbox" className="peer hidden" id={condition} onChange={() => handleCheckboxChange(condition)} />
                 <div
                   className="w-6 h-6 border-2 border-[#F48265] rounded cursor-pointer flex items-center justify-center 
             peer-checked:bg-[#F48265] relative peer-checked:before:content-['✔'] 
