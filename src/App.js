@@ -1,7 +1,8 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./components/Home"; // Your Home component
-import Layout from "./components/Layout"; // Your Layout component
+import Home from "./components/Home"; 
+import Layout from "./components/Layout";
+import IVFSuccessRateCalculator from "./components/IVFSuccessRateCalculator";
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="/ivf-success-rate-calculator" element={<div>IVF Success Rate Calculator</div>} />
+            <Route path="/ivf-success-rate-calculator" element={<IVFSuccessRateCalculator/>} />
           </Route>
         </Routes>
       </Router>

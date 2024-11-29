@@ -75,7 +75,7 @@ const Navbar = () => {
                   <Link
                     to="/ivf-success-rate-calculator"
                     className="block px-4 py-2 text-base hover:bg-gray-100"
-                    onClick={() => setIsDropdownOpen(false)} // Close on click
+                    onClick={() => setIsDropdownOpen(false)}
                   >
                     IVF Success Rate Calculator
                   </Link>

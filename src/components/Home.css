@@ -30,5 +30,5 @@
   
   .animate-text {
     animation: colorChange 5s infinite linear, scaleUp 1.5s infinite ease-in-out;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add shadow for depth */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
   }
